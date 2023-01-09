@@ -67,8 +67,11 @@ def pad_collate_GCNN(samples, pad_idx=1):
         #(right-padded: keep padding on the right edge)
     for i,s in enumerate(samples): res[:len(s[0]),i] = LongTensor(s[0]) #right-padded
     #return res as the padded tensor, and another tensor composed of the labels (found in s[1])
-    return res.cuda(), torch.FloatTensor(np.array([s[1] for s in samples])).squeeze().cuda()
-
+    labelsList = [s[1] for s in samples]
+    labels = torch.stack(labelsList, dim=0)
+    labels = torch.FloatTensor(labels)
+    labels = labels.squeeze().cuda()
+    return res.cuda(), labels
 
 
 
